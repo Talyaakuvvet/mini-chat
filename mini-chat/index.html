@@ -104,7 +104,7 @@
         return;
       }mini-chat.railway.internal
 
-      fetch("http://localhost:3000/messages", {
+      fetch("https://mini-chat-production-3f7b.up.railway.app", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, content })
@@ -117,7 +117,7 @@
     }
 
     function loadMessages() {
-      fetch("http://localhost:3000/messages")
+      fetch("https://mini-chat-production-3f7b.up.railway.app/messages")
         .then(r => r.json())
         .then(data => {
           const list = document.getElementById("list");
