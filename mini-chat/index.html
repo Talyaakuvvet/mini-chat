@@ -104,7 +104,7 @@
         return;
       }
 
-      fetch("https://mini-chat-production-3f7b.up.railway.app", {
+      fetch("https://mini-chat-production-3f7b.up.railway.app/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, content })
@@ -129,6 +129,4 @@
           `).join("");
         });
     }
-  </script>
-</body>
-</html>
+</script>
