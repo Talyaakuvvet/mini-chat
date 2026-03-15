@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Chat</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #1a1a2e;
+    }
+
+    .input-area {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #4a90d9;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover { background-color: #357abd; }
+
+    #list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #list li {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    #list li strong { color: #4a90d9; }
+
+    #list li small {
+      display: block;
+      color: #999;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>💬 Mini Chat</h2>
+
+    <div class="input-area">
+      <input id="username" placeholder="Kullanıcı adın" />
+      <input id="msg" placeholder="Mesajını yaz..." />
+      <button onclick="send()">Gönder</button>
+    </div>
+
+    <ul id="list"></ul>
+  </div>
+
+  <script>
+    loadMessages();
+
+    function send() {
+      const username = document.getElementById("username").value.trim();
+      const content = document.getElementById("msg").value.trim();
+
+      if (!username || !content) {
+        alert("Lütfen kullanıcı adı ve mesaj girin!");
+        return;
+      }
+
+      fetch("http://localhost:3000/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, content })
+      })
+      .then(res => res.json())
+      .then(() => {
+        document.getElementById("msg").value = "";
+        loadMessages();
+      });
+    }
+
+    function loadMessages() {
+      fetch("http://localhost:3000/messages")
+        .then(r => r.json())
+        .then(data => {
+          const list = document.getElementById("list");
+          list.innerHTML = data.map(m => `
+            <li>
+              <strong>${m.username}</strong>: ${m.content}
+              <small>${new Date(m.timestamp).toLocaleString("tr-TR")}</small>
+            </li>
+          `).join("");
+        });
+    }
+  </script>
+</body>
+</html>
